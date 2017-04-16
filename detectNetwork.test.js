@@ -17,13 +17,12 @@ describe('Introduction to Mocha Tests - READ ME FIRST', function() {
   // Once you've read and understood this section, please comment it out.
   // You will not be able to proceed with a failing test.
 
-  it('Throws an error so it fails', function() {
-  });
+  it('Throws an error so it fails', function() {});
 
   it('Doesn\'t throw an error, so it doesn\'t fail', function() {
     // This test doesn't really test anything at all! It will pass no matter what.
-    var even = function(num){
-      return num%2 === 0;
+    var even = function(num) {
+      return num % 2 === 0;
     };
     return even(10) === true;
   });
@@ -31,15 +30,15 @@ describe('Introduction to Mocha Tests - READ ME FIRST', function() {
   // In tests, we want to compare the expected behavior to the actual behavior.
   // A test should only fail if the expected behavior doesn't match the actual.
   it('Throws an error when expected behavior does not match actual behavior', function() {
-    var even = function(num){
-      return num%2 === 0;
+    var even = function(num) {
+      return num % 2 === 0;
     };
 
-    if(even(10) !== true) {
+    if (even(10) !== true) {
       throw new Error('10 should be even!');
     }
   });
- });
+});
 describe('Diner\'s Club', function() {
   // Be careful, tests can have bugs too...
 
@@ -62,7 +61,7 @@ describe('American Express', function() {
   // It can get annoying to keep typing the if/throw, so here is a
   // helper function to throw an error if the input statement isn't true.
   var assert = function(isTrue) {
-    if(!isTrue) {
+    if (!isTrue) {
       throw new Error('Test failed');
     }
 
@@ -185,5 +184,48 @@ describe('Maestro', function() {
 
 });
 
-describe('should support China UnionPay');
-describe('should support Switch');
+describe('should support China UnionPay', function() {
+
+  for (card = 16; card <= 19; card++) {
+    (function(card){
+      for (var prefix = 622126; prefix <= 622925; prefix++) {
+        (function(prefix) {
+          it('has a prefix of ' + prefix + ' and a length of ' + card, function() {
+            detectNetwork(prefix + "0000000000" + "0".repeat(card-16)).should.equal('China UnionPay');
+          });
+        })(prefix);
+      }
+      for (var prefix2 = 624; prefix2 <= 626; prefix2++){
+        (function(prefix2) {
+          it('has a prefix of ' + prefix2 + ' and a length of ' + card, function(){
+            detectNetwork(prefix2 + "0000000000000" + "0".repeat(card-16)).should.equal('China UnionPay');
+          });
+        })(prefix2);
+      }
+      for (var prefix3 = 6282; prefix3 <= 6288; prefix3++){
+        (function(prefix3) {
+          it('has a prefix of ' + prefix3 + ' and a length of ' + card, function(){
+            detectNetwork(prefix3 + "000000000000" + "0".repeat(card-16)).should.equal('China UnionPay');
+          });
+        })(prefix3);
+      }
+    })(card);
+  }
+});
+
+describe('should support Switch', function() {
+  var prefixes = ['4903','4905', '4911', '4936', '564182', '633110','6333','6759'];
+  var cardLengths = [16,18,19];
+  for(var len = 0;len<cardLengths.length;len++){
+    (function(len){
+        for(var prefix = 0;prefix<prefixes.length; prefix++){
+          (function(prefix){
+            it('has a prefix of ' + prefixes[prefix] + ' and a length of ' + cardLengths[len], function(){
+              var cardNum = prefixes[prefix] + "0000000000" + "0".repeat(cardLengths[len]-prefixes[prefix].length-10);
+              detectNetwork(cardNum).should.equal('Switch');
+            });
+          })(prefix);
+        }
+    })(len);
+  }
+});
